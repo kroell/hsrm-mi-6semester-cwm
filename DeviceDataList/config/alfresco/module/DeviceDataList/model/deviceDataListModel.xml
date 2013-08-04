@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Definition of new Model -->
+<model name="idddl:deviceDataListModel" xmlns="http://www.alfresco.org/model/dictionary/1.0">
+
+	<!-- Optional meta-data about the model -->
+	<description>Device Data List Model</description>
+	<author>Soeren Kroell</author>
+	<version>1.0</version>
+
+	<!-- Imports are required to allow references to definitions in other models -->
+	<imports>
+		<!-- Import Alfresco Dictionary Definitions -->
+		<import uri="http://www.alfresco.org/model/dictionary/1.0" prefix="d" />
+		<!-- Import Alfresco Content Domain Model Definitions -->
+		<import uri="http://www.alfresco.org/model/content/1.0" prefix="cm" />
+		<import uri="http://www.alfresco.org/model/system/1.0" prefix="sys" />
+		<import uri="http://www.alfresco.org/model/datalist/1.0" prefix="dl" />
+	</imports>
+
+	<!-- Introduction of new namespaces defined by this model -->
+	<namespaces>
+		<namespace uri="http://www.idseven.de/model/deviceDataList/1.0" prefix="idddl" />
+	</namespaces>
+	
+	<constraints>
+        <constraint name="idddl:deviceStatusList" type="LIST">
+			<parameter name="allowedValues">
+				<list>
+				        <value>Verfuegbar</value>
+				        <value>Ausgeliehen</value>
+				        <value>Defekt</value>
+				        <value>In Reperatur</value>
+				        <value>Siehe Bemerkung</value>
+				</list>
+	        </parameter>
+		</constraint>
+    </constraints>
+
+	<types>
+		<type name="idddl:deviceList">
+			<title>Geraeteausleihe Liste</title>
+			<description>Liste mit Bezeichnung, Bild, Status, Ausgeliehen und Reperaturvermerk</description>
+			<parent>dl:dataListItem</parent>
+			<properties>
+				<property name="idddl:deviceName">
+					<title>Bezeichnung</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+		        </property>
+		        <property name="idddl:deviceId">
+					<title>Geraete-ID</title>
+					<type>d:int</type>
+					<mandatory>true</mandatory>
+		        </property>
+		        <property name="idddl:devicePurchaseDate">
+					<title>Kaufdatum</title>
+					<type>d:datetime</type>
+					<mandatory>true</mandatory>
+		        </property>
+		        <property name="idddl:deviceStatus">
+					<title>Status</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+					<constraints>
+						<constraint ref="idddl:deviceStatusList" />
+					</constraints>
+				</property>
+				<property name="idddl:deviceBorrowedDate">
+					<title>Ausgeliehen seit</title>
+					<type>d:datetime</type>
+					<mandatory>false</mandatory>
+		        </property>
+				<property name="idddl:deviceUnborrowedDate">
+					<title>Rueckgabe bis</title>
+					<type>d:datetime</type>
+					<mandatory>false</mandatory>
+		        </property>
+		        <property name="idddl:deviceRepareCompany">
+					<title>Firma</title>
+					<type>d:text</type>
+					<mandatory>false</mandatory>
+		        </property>
+		        <property name="idddl:deviceRepareStart">
+					<title>In Reparatur seit</title>
+					<type>d:datetime</type>
+					<mandatory>false</mandatory>
+		        </property>
+		        <property name="idddl:deviceRepareStop">
+					<title>In Reparatur bis</title>
+					<type>d:datetime</type>
+					<mandatory>false</mandatory>
+		        </property>
+		        <property name="idddl:deviceNotes">
+					<title>Bemerkungen</title>
+					<type>d:text</type>
+					<mandatory>false</mandatory>
+		        </property>
+         </properties>
+         <associations>
+            <association name="idddl:assignee">
+               <title>Ausgeliehen an</title>
+               <source>
+                  <mandatory>false</mandatory>
+                  <many>true</many>
+               </source>
+               <target>
+                  <class>cm:person</class>
+                  <mandatory>false</mandatory>
+                  <many>false</many>
+               </target>
+            </association>
+            <association name="idddl:devicePicture">
+               <title>Bild</title>
+               <source>
+                  <mandatory>false</mandatory>
+                  <many>true</many>
+               </source>
+               <target>
+                  <class>cm:cmobject</class>
+                  <mandatory>false</mandatory>
+                  <many>true</many>
+               </target>
+            </association>
+         </associations>
+      </type>
+	</types>
+</model>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process-definition xmlns="urn:jbpm.org:jpdl-3.1" name="prktm:PraktikumWorkflow">
+
+	<swimlane name="initiator" />
+	
+	<swimlane name="sekretariat">
+        <assignment class="org.alfresco.repo.workflow.jbpm.AlfrescoAssignment">
+            <pooledactors>#{people.getGroup('GROUP_groupPraktikum')}</pooledactors>
+        </assignment>    
+    </swimlane>
+    
+	<start-state name="start">
+		<task name="prktm:submitPraktikum" swimlane="initiator" />
+		<transition name="Anmeldung einreichen" to="kontrolle1" />
+	</start-state>
+
+ 	<swimlane name="betreuer">
+		<assignment	class="org.alfresco.repo.workflow.jbpm.AlfrescoAssignment">
+			<actor>#{prktm_betreuer}</actor>
+		</assignment>
+	</swimlane>
+
+	<task-node name="kontrolle1">
+		<task name="prktm:kontrolle1" swimlane="sekretariat" />
+		<transition name="Anmeldung genehmigen lassen" to="genehmigungAnmeldung" />
+		<transition name="Anmeldung zurueck zum Studenten" to="anmeldungEinreichen" />
+	</task-node>
+
+	<task-node name="anmeldungEinreichen">
+		<task name="prktm:anmeldungEinreichen" swimlane="initiator" />
+		<transition name="Anmeldung einreichen" to="kontrolle1" />
+	</task-node>
+
+
+	<task-node name="genehmigungAnmeldung">
+		<task name="prktm:genehmigungAnmeldung" swimlane="betreuer" />
+		<transition name="Anmeldung genehmigen" to="berichtEinreichen" />
+		<transition name="Anmeldung ablehnen" to="kontrolle1" />
+	</task-node>
+	
+	<task-node name="berichtEinreichen">
+		<task name="prktm:berichtEinreichen" swimlane="initiator" />
+		<transition name="Praktikumsbericht einreichen" to="genehmigungBericht" />
+	</task-node>
+	
+	<task-node name="genehmigungBericht">
+		<task name="prktm:genehmigungBericht" swimlane="betreuer" />
+		<transition name="Bericht genehmigen" to="praktikumCompleted" />
+		<transition name="Bericht ablehnen" to="berichtEinreichen" />
+	</task-node>
+
+	<task-node name="praktikumCompleted">
+		<task name="prktm:praktikumCompleted" swimlane="sekretariat" />
+		<transition name="Workflow abschliessen" to="end" />
+	</task-node>
+
+
+	<end-state name="end" />
+
+	<event type="process-end">
+		<action class="org.alfresco.repo.workflow.jbpm.AlfrescoJavaScript">
+			<script>
+				if (logger.isLoggingEnabled())
+				logger.log("End of process.
+				Cancelled: " + cancelled);
+			</script>
+		</action>
+	</event>
+
+</process-definition>

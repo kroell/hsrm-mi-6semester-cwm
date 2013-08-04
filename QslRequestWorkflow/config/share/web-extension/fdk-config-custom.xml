@@ -1,0 +1,216 @@
+<alfresco-config>
+
+	<!-- idwf:qslRequestWorkflow process definition start task -->
+	<config evaluator="string-compare" condition="jbpm$idwf:qslRequestWorkflow">
+		<forms>
+			<form>
+				<!-- Anzeigen von Feldern, hide ist auch moeglich -->
+				<field-visibility>
+					<show id="bpm:workflowDescription" />
+					<show id="idwf:requestDescription" />
+					<show id="bpm:assignee" />
+					<show id="idwf:requestStatus" />
+					<show id="idwf:requestDate" />	
+					<show id="idwf:requestSum" />
+					<show id="packageItems" />
+					<show id="idwf:notifyMe" />
+				</field-visibility>
+				
+				<appearance>
+					<set id="" appearance="title" label="Details zum Antrag" />
+					<set id="desc" appearance="" />
+					<set id="two_col" appearance="" template="/org/alfresco/components/form/2-column-set.ftl"/>
+					<set id="items" appearance="title" label="Antrag und Anlagen" />
+					<set id="misc" appearance="title" label="Weitere Optionen" />
+					
+					<!-- Details zum Antrag -->
+					<field id="bpm:workflowDescription" label="Antragstitel" mandatory="true" />
+					
+					<field id="idwf:requestDescription" set="desc" >
+						<control template="/org/alfresco/components/form/controls/textarea.ftl" >
+							<control-param name="style">width: 100%</control-param>
+						</control>
+					</field>
+					
+					<field id="idwf:requestStatus" set="two_col"/>
+					<field id="bpm:assignee" label="Empfaenger" set="two_col"/>
+					
+					<field id="idwf:requestSum" set="two_col"/>
+					<field id="idwf:requestDate" set="two_col"/>
+
+					<!--  Antrag und Anlagen -->
+					<field id="packageItems" label="Anhang" set="items"/>
+					
+					<!-- Weitere Optionen -->
+					<field id="idwf:notifyMe" set="misc" />
+				</appearance>
+			</form>
+		</forms>
+	</config>
+	
+	<!-- idwf:submitQslRequest Workflow Details Form -->
+	<config evaluator="task-type" condition="idwf:submitQslRequest">
+		<forms>
+			<form id="workflow-details">
+				<field-visibility>
+					<show id="message" />
+					<show id="idwf:requestDescription" />
+					<show id="bpm:assignee" />
+					<show id="idwf:requestStatus" />
+					<show id="idwf:requestDate" />	
+					<show id="idwf:requestSum" />
+					<show id="packageItems" />
+					<show id="idwf:notifyMe" />
+				</field-visibility>
+				
+				<appearance>
+					<set id="" appearance="title" label="Details zum Antrag" />
+					<set id="desc" appearance="" />
+					<set id="two_col" appearance="" template="/org/alfresco/components/form/2-column-set.ftl"/>
+					<set id="items" appearance="title" label="Antrag und Anlagen" />
+					<set id="misc" appearance="title" label="Weitere Optionen" />
+					
+					<!-- Details zum Antrag -->
+					
+					<field id="message" label="Antragstitel" />
+					
+					<field id="idwf:requestDescription" set="desc" >
+						<control template="/org/alfresco/components/form/controls/textarea.ftl">
+							<control-param name="style">width: 100%</control-param>
+						</control>
+					</field>
+					
+					<field id="idwf:requestStatus" set="two_col"/>
+					<field id="bpm:assignee" label="Empfaenger" set="two_col"/>
+					
+					<field id="idwf:requestSum" set="two_col"/>
+					<field id="idwf:requestDate" set="two_col"/>
+
+					<!-- Antrag und Anlagen -->
+					<field id="packageItems" label="Anhang" set="items"/>
+					
+					<!-- Weitere Optionen -->
+					<field id="idwf:notifyMe" set="misc" />
+				</appearance>
+				
+			</form>
+		</forms>
+	</config>
+
+	<!-- idwf:qslRequest - how it looks like to the assignee -->
+	<config evaluator="task-type" condition="idwf:qslRequest">
+		<forms>
+			<form>
+				<field-visibility>
+					<show id="taskOwner" />
+					<show id="message" />
+					<show id="idwf:requestDescription" />
+					<show id="packageItems" />
+					<show id="idwf:requestStatus" />
+					<show id="idwf:requestDate" />	
+					<show id="idwf:requestSum" />
+					<show id="bpm:taskId" />
+					<show id="bpm:status" />
+					<show id="bpm:comment" />
+					<show id="transitions" />
+				</field-visibility>
+				<appearance>
+					<set id="" appearance="title" label="" />
+					<set id="info" appearance="title" label="Allgemeines zum Antrag" />
+					<set id="details" appearance="title" label="Details zum Antrag" template="/org/alfresco/components/form/3-column-set.ftl"/>
+					<set id="details_wf_tc" appearance="title" label="Details zum Workflow" template="/org/alfresco/components/form/2-column-set.ftl"/>
+					<set id="details_wf" appearance="" />
+					
+					<!-- Allgemeines zum Antrag -->
+					<field id="taskOwner" label="Antragsteller" set="info" />
+					
+					<field id="message" label="Antragstitel" set="info">
+						<control template="/org/alfresco/components/form/controls/info.ftl" />
+					</field>
+					
+					<field id="idwf:requestDescription" set="info">
+						<control template="/org/alfresco/components/form/controls/info.ftl" />
+					</field>
+					
+					<field id="packageItems" set="info" />
+					
+					<!-- Details zum Antrag -->
+					<field id="idwf:requestStatus" set="details" />
+					<field id="idwf:requestDate" set="details" >
+						<control template="/org/alfresco/components/form/controls/info.ftl" />
+					</field>
+					<field id="idwf:requestSum" set="details" >
+						<control template="/org/alfresco/components/form/controls/info.ftl" />
+					</field>
+
+					<!-- Details zum Workflow -->
+					<field id="bpm:status" label="Workflow Status" set="details_wf_tc" />
+					<field id="bpm:taskId" label="Workflow Nummer" set="details_wf_tc" />
+	
+					<field id="bpm:comment" label="Kommentar einfuegen" set="details_wf">
+						<control template="/org/alfresco/components/form/controls/textarea.ftl">
+							<control-param name="style">width: 100%</control-param>
+						</control>
+					</field>
+					
+					<field id="transitions" set="details_wf" />
+					
+				</appearance>
+			</form>
+		</forms>
+	</config>
+	
+	<!-- idwf:completedQslRequest Completed Form -->
+	<config evaluator="task-type" condition="idwf:completedQslRequest">
+		<forms>
+			<form>
+				<field-visibility>
+					<show id="message" />
+					<show id="idwf:requestDescription" />
+					<show id="bpm:assignee" />
+					<show id="idwf:requestStatus" />
+					<show id="idwf:requestDate" />	
+					<show id="idwf:requestSum" />
+					<show id="packageItems" />
+					<show id="idwf:notifyMe" />
+					<show id="transitions" />
+				</field-visibility>
+				
+				<appearance>
+					<set id="" appearance="title" label="Details zum Antrag" />
+					<set id="desc" appearance="" />
+					<set id="two_col" appearance="" template="/org/alfresco/components/form/2-column-set.ftl"/>
+					<set id="items" appearance="title" label="Antrag und Anlagen" />
+					<set id="misc" appearance="title" label="Weitere Optionen" />
+					<set id="details_wf" appearance="" />
+					
+					<!-- Details zum Antrag -->
+					<field id="message" label="Antragstitel" mandatory="true" />
+					
+					<field id="idwf:requestDescription" set="desc">
+						<control template="/org/alfresco/components/form/controls/textarea.ftl">
+							<control-param name="style">width: 100%</control-param>
+						</control>
+					</field>
+					
+					<field id="idwf:requestStatus" set="two_col"/>
+					<field id="bpm:assignee" label="Empfaenger" set="two_col"/>
+					
+					<field id="idwf:requestSum" set="two_col"/>
+					<field id="idwf:requestDate" set="two_col"/>
+					
+					<!-- Antrag und Anlagen -->
+					<field id="packageItems" label="Anhang" set="items"/>
+					
+					<!-- Weitere Optionen -->
+					<field id="idwf:notifyMe" set="misc" />
+					
+					<field id="transitions" set="details_wf" />
+					
+				</appearance>
+				
+			</form>
+		</forms>
+	</config>
+
+</alfresco-config>

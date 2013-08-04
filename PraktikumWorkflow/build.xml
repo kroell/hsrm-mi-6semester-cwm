@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Alfresco Praktikum Workflow" default="deploy" basedir=".">
+	<property file="build.properties" />
+
+	<property name="project.dir" value="." />
+	<property name="build.dir" value="${project.dir}/build" />
+	<property name="project.name" value="cwm-praktikum-workflow" />
+	<property name="package.share.jar" value="${build.dir}/${project.name}.jar" />
+	<property name="project.file.zip" value="${build.dir}/${project.name}-project.zip" />
+	<property name="package.file.amp" value="${build.dir}/${project.name}.amp" />
+	<property name="module.id" value="PraktikumWorkflow" />
+	<property name="module.dir" value="/module" />
+	<property name="source.dir" value="${project.dir}/src" />
+	<property name="config.alfresco.dir" value="${project.dir}/config/alfresco" />
+	<property name="config.share.dir" value="${project.dir}/config/share" />	
+	<property name="extension.dir" value="/alfresco/extension" />
+	
+	<!-- used for AMP deployment via MMT -->
+	<path id="classpath.server">
+		<fileset dir="${alfresco.sdk.dir}/server" includes="**/*.jar" />
+	</path>
+	
+	<target name="clean" description="Removes all generated files">
+		<delete dir="${build.dir}" />
+	</target>
+
+	<target name="setup" description="Creates the ${build.dir} and ${bin.dir} directories">
+		<mkdir dir="${build.dir}" />
+	</target>
+
+	<target name="deploy" depends="deploy-amp" />		
+
+	<target name="zip-project" depends="setup" description="Zips the entire Eclipse project as-is into ${project.file.zip}">
+		<delete file="${project.file.zip}" />
+		<zip destfile="${project.file.zip}">
+			<zipfileset dir="${project.dir}" excludes="build/** bin/**" prefix="${project.name}-${label}" />
+		</zip>
+	</target>	
+	
+	<target name="package-amp" depends="setup" description="Packages the customizations as an Alfresco module in ${package.file.amp}">
+		<delete file="${package.file.amp}" />
+		<zip destfile="${package.file.amp}">
+			<zipfileset file="${config.alfresco.dir}${module.dir}/${module.id}/module.properties" />						
+			<zipfileset file="${config.alfresco.dir}${module.dir}/${module.id}/file-mapping.properties" />
+			<zipfileset dir="${config.alfresco.dir}${module.dir}/${module.id}" prefix="config/alfresco${module.dir}/${module.id}" />
+		</zip>
+	</target>
+	
+	<target name="install-amp" depends="package-amp" description="Uses the Alfresco MMT to install the AMP into ${alfresco.war.path}">
+	    <!--<java dir="." fork="true" classname="org.alfresco.repo.module.tool.ModuleManagementTool">-->
+	    <java dir="." fork="true" jar="${alfresco.install.dir}/bin/alfresco-mmt.jar">
+			<classpath refid="classpath.server"/>
+	    	<arg line="install ${package.file.amp} ${alfresco.war.path} -force -verbose"/>
+	    </java>
+	</target>
+	
+	<target name="deploy-amp" description="Unzips the AMP'd WAR file into ${alfresco.web.dir}">
+		<unzip src="${alfresco.war.path}" dest="${alfresco.web.dir}" />
+	</target>
+
+	<target name="package-share-jar" depends="setup">
+	    <delete file="${package.share.jar}" />
+	    <jar destfile="${package.share.jar}">
+	        <zipfileset dir="${config.share.dir}" prefix="alfresco" />
+	    </jar>
+	</target>
+
+	<target name="deploy-share-jar" depends="package-share-jar"
+		description="Copies package share JAR file to Share's WEB-INF lib">
+		<copy file="${package.share.jar}" todir="${share.web.dir}/WEB-INF/lib"/>
+	</target>
+	
+	<target name="install-fdk-amp" description="Uses the Alfresco MMT to install the AMP into ${alfresco.war.path}">
+	    <!--<java dir="." fork="true" classname="org.alfresco.repo.module.tool.ModuleManagementTool">-->
+	    <java dir="." fork="true" jar="${alfresco.install.dir}/bin/alfresco-mmt.jar">
+			<classpath refid="classpath.server"/>
+	    	<arg line="install ${fdk.amp.path} ${alfresco.war.path} -force -verbose"/>
+	    </java>
+	</target>
+
+	<target name="deploy-fdk-jar" description="Copies FDK JAR file to shared lib">
+		<copy file="${fdk.jar.path}" todir="${share.lib.webapps}"/>
+	</target>
+	
+</project>

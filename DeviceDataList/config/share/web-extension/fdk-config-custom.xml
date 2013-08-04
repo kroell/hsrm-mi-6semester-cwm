@@ -1,0 +1,135 @@
+<alfresco-config>
+	<!-- idddl:deviceList type -->
+	<config evaluator="model-type" condition="idddl:deviceList">
+		<forms>
+			<dependencies>
+	        	<css src="/custom/forms/custom-label-layout.css" />
+		    </dependencies>
+			<!-- Create item form -->
+			<form>
+				<field-visibility>
+					<show id="idddl:deviceName" />
+					<show id="idddl:deviceId" />
+					<show id="idddl:devicePurchaseDate" />
+					<show id="idddl:devicePicture" />
+					<show id="idddl:deviceStatus" />
+					<show id="idddl:assignee" />
+					<show id="idddl:deviceBorrowedDate" />
+					<show id="idddl:deviceUnborrowedDate" />
+					<show id="idddl:deviceRepareCompany" />
+					<show id="idddl:deviceRepareStart" />
+					<show id="idddl:deviceRepareStop" />
+					<show id="idddl:deviceNotes" />
+				</field-visibility>
+				<create-form template="/org/alfresco/components/data-lists/forms/dataitem.ftl" />
+				<appearance>
+					<set id="" appearance="title" label="Allgemeines" />
+					<set id="two_col" appearance="" template="/org/alfresco/components/form/2-column-set.ftl" />
+					<set id="status" appearance="" />
+					<set id="borrowed" appearance="title" label="Ausgeliehen" />
+					<set id="borrowedColumn" appearance="" template="/org/alfresco/components/form/2-column-set.ftl"/>
+					<set id="repare" appearance="title" label="Reparatur" />
+					<set id="repareColumn" appearance="" template="/org/alfresco/components/form/2-column-set.ftl"/>
+					<set id="misc" appearance="title" label="Sonstiges" />
+					
+					<!-- Allgemeines -->
+					<field id="idddl:deviceId" set="two_col" />
+					<field id="idddl:devicePicture" set="two_col" />
+					
+					<field id="idddl:deviceStatus" set="two_col" />
+					<field id="idddl:devicePurchaseDate" set="two_col" />
+					
+
+					<!-- Ausgeliehen -->
+					<field id="idddl:assignee" set="borrowed" />
+					<field id="idddl:deviceBorrowedDate" set="borrowedColumn" />
+					<field id="idddl:deviceUnborrowedDate" set="borrowedColumn" />
+					
+					<!-- In Reparatur -->
+					<field id="idddl:deviceRepareCompany" set="repare" />
+					<field id="idddl:deviceRepareStart" set="repareColumn" />
+					<field id="idddl:deviceRepareStop" set="repareColumn" />
+					
+					<!-- Sonstiges -->
+					<field id="idddl:deviceNotes" set="misc">
+					   <control template="/org/alfresco/components/form/controls/textarea.ftl" />
+					</field>
+				</appearance>
+			</form>
+
+			<!-- Data Grid view -->
+			<form id="datagrid">
+				<field-visibility>
+					<show id="idddl:deviceId" />
+					<show id="idddl:deviceName" />
+					<show id="idddl:devicePicture" />
+					<show id="idddl:devicePurchaseDate" />
+					<show id="idddl:deviceStatus" />
+					<show id="idddl:assignee" />
+					<show id="idddl:deviceUnborrowedDate" />
+					<show id="idddl:deviceRepareCompany" />
+					<show id="idddl:deviceRepareStop" />
+					<show id="idddl:deviceNotes" />			
+				</field-visibility>
+			</form>
+		</forms>
+	</config>
+
+	<!-- idddl_deviceList type (existing nodes) -->
+	<config evaluator="node-type" condition="idddl:deviceList">
+		<forms>
+			<!-- Data List pop-up edit form -->
+			<form>
+				<field-visibility>
+					<show id="idddl:deviceName" />
+					<show id="idddl:deviceId" />
+					<show id="idddl:devicePurchaseDate" />
+					<show id="idddl:devicePicture" />
+					<show id="idddl:deviceStatus" />
+					<show id="idddl:assignee" />
+					<show id="idddl:deviceBorrowedDate" />
+					<show id="idddl:deviceUnborrowedDate" />
+					<show id="idddl:deviceRepareCompany" />
+					<show id="idddl:deviceRepareStart" />
+					<show id="idddl:deviceRepareStop" />
+					<show id="idddl:deviceNotes" />
+				</field-visibility>
+				<create-form template="/org/alfresco/components/data-lists/forms/dataitem.ftl" />
+				<appearance>
+					<set id="" appearance="title" label="Allgemeines" />
+					<set id="two_col" appearance="" template="/org/alfresco/components/form/2-column-set.ftl" />
+					<set id="status" appearance="" />
+					<set id="borrowed" appearance="title" label="Ausgeliehen" />
+					<set id="borrowedColumn" appearance="" template="/org/alfresco/components/form/2-column-set.ftl"/>
+					<set id="repare" appearance="title" label="Reparatur" />
+					<set id="repareColumn" appearance="" template="/org/alfresco/components/form/2-column-set.ftl"/>
+					<set id="misc" appearance="title" label="Sonstiges" />
+					
+					<!-- Allgemeines -->
+					<field id="idddl:deviceId" set="two_col" />
+					<field id="idddl:devicePicture" set="two_col" />
+					
+					<field id="idddl:deviceStatus" set="two_col" />
+					<field id="idddl:devicePurchaseDate" set="two_col" />
+					
+
+					<!-- Ausgeliehen -->
+					<field id="idddl:assignee" set="borrowed" />
+					<field id="idddl:deviceBorrowedDate" set="borrowedColumn" />
+					<field id="idddl:deviceUnborrowedDate" set="borrowedColumn" />
+					
+					<!-- In Reparatur -->
+					<field id="idddl:deviceRepareCompany" set="repare" />
+					<field id="idddl:deviceRepareStart" set="repareColumn" />
+					<field id="idddl:deviceRepareStop" set="repareColumn" />
+					
+					<!-- Sonstiges -->
+					<field id="idddl:deviceNotes" set="misc">
+					   <control template="/org/alfresco/components/form/controls/textarea.ftl" />
+					</field>
+				</appearance>
+			</form>
+		</forms>
+	</config>
+
+</alfresco-config>

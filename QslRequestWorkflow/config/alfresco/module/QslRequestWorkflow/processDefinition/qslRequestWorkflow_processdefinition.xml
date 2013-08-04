@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process-definition xmlns="urn:jbpm.org:jpdl-3.1" name="idwf:qslRequestWorkflow">
+
+	<swimlane name="initiator" />
+
+	<start-state name="start">
+		<task name="idwf:submitQslRequest" swimlane="initiator" />
+		<transition name="Antrag einreichen" to="qslrequest" />
+	</start-state>
+
+	<swimlane name="assignee">
+		<assignment actor-id="#{bpm_assignee.properties['cm:userName']}" />
+	</swimlane>
+
+	<task-node name="qslrequest">
+		<task name="idwf:qslRequest" swimlane="assignee" />
+		<transition name="Antrag abschliessen" to="completed">
+			<action class="org.alfresco.repo.workflow.jbpm.AlfrescoJavaScript">
+				<script>
+					if (idwf_notifyMe)
+					{
+						var mail = actions.create("mail");
+						mail.parameters.to = initiator.properties["cm:email"];
+						mail.parameters.subject = "Ihr QSL Antrag";
+						mail.parameters.from = bpm_assignee.properties["cm:email"];
+						mail.parameters.text = "Ihr QSL Antrag vom " + idwf_requestDate + " wurde final bearbeitet";
+					}
+				</script>
+			</action>
+		</transition>
+	</task-node>
+
+	<task-node name="completed">
+		<task name="idwf:completedQslRequest" swimlane="initiator" />
+		<transition name="Antrag beenden" to="end" />
+	</task-node>
+
+	<end-state name="end" />
+
+	<event type="process-end">
+		<action class="org.alfresco.repo.workflow.jbpm.AlfrescoJavaScript">
+			<script>
+				if (logger.isLoggingEnabled())
+				logger.log("End of process.
+				Cancelled: " + cancelled);
+			</script>
+		</action>
+	</event>
+
+</process-definition>

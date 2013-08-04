@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Definition of new Model -->
+<model name="prktm:PraktikumWorkflowModel" xmlns="http://www.alfresco.org/model/dictionary/1.0">
+
+	<!-- Optional meta-data about the model -->
+	<description>Betriebspraktikum Workflow Model</description>
+	<author>David Broll</author>
+	<version>1.0</version>
+
+	<!-- Imports are required to allow references to definitions in other models -->
+	<imports>
+		<!-- Import Alfresco Dictionary Definitions -->
+		<import uri="http://www.alfresco.org/model/dictionary/1.0" prefix="d" />
+		<!-- Import Alfresco Content Domain Model Definitions -->
+		<import uri="http://www.alfresco.org/model/content/1.0" prefix="cm" />
+		<import uri="http://www.alfresco.org/model/bpm/1.0" prefix="bpm" />
+	</imports>
+
+	<!-- Introduction of new namespaces defined by this model -->
+	<namespaces>
+		<namespace uri="http://www.davidbroll.com/model/prktmWorkflowModel/1.0"
+			prefix="prktm" />
+	</namespaces>
+
+	<constraints>
+		<constraint name="prktm:requestStatusList" type="LIST">
+			<parameter name="allowedValues">
+				<list>
+					<value>Neuantrag</value>
+					<value>In Bearbeitung</value>
+					<value>Rückfragen</value>
+					<value>Bewilligt</value>
+					<value>Abgelehnt</value>
+				</list>
+			</parameter>
+		</constraint>
+	</constraints>
+	
+	
+<types>
+		<type name="prktm:submitPraktikum">
+			<parent>bpm:startTask</parent>
+			<mandatory-aspects>
+				<aspect>prktm:PraktikumDetails</aspect>
+			</mandatory-aspects>
+		</type>
+
+		<type name="prktm:kontrolle1">
+			<parent>bpm:workflowTask</parent>
+			<overrides>
+				<property name="bpm:packageActionGroup">
+					<default>add_package_item_actions</default>
+       			</property>
+	       		<property name="bpm:packageItemActionGroup">
+	          		<default>edit_and_remove_package_item_actions</default>
+	       		</property>
+    		</overrides>
+			<mandatory-aspects>
+				<aspect>prktm:PraktikumDetails</aspect>
+			</mandatory-aspects>
+		</type>
+		
+		<type name="prktm:anmeldungEinreichen">
+			<parent>bpm:workflowTask</parent>
+			<overrides>
+				<property name="bpm:packageActionGroup">
+					<default>add_package_item_actions</default>
+       			</property>
+	       		<property name="bpm:packageItemActionGroup">
+	          		<default>edit_and_remove_package_item_actions</default>
+	       		</property>
+    		</overrides>
+			<mandatory-aspects>
+				<aspect>prktm:PraktikumDetails</aspect>>
+			</mandatory-aspects>
+		</type>
+
+		<type name="prktm:genehmigungAnmeldung">
+			<parent>bpm:workflowTask</parent>
+			<overrides>
+				<property name="bpm:packageActionGroup">
+					<default>add_package_item_actions</default>
+       			</property>
+	       		<property name="bpm:packageItemActionGroup">
+	          		<default>edit_and_remove_package_item_actions</default>
+	       		</property>
+    		</overrides>
+			<mandatory-aspects>
+				<aspect>prktm:PraktikumDetails</aspect>>
+			</mandatory-aspects>
+		</type>
+
+		<type name="prktm:berichtEinreichen">
+			<parent>bpm:workflowTask</parent>
+			<overrides>
+				<property name="bpm:packageActionGroup">
+					<default>add_package_item_actions</default>
+       			</property>
+	       		<property name="bpm:packageItemActionGroup">
+	          		<default>edit_and_remove_package_item_actions</default>
+	       		</property>
+    		</overrides>
+			<mandatory-aspects>
+				<aspect>prktm:PraktikumDetails</aspect>>
+			</mandatory-aspects>
+		</type>
+
+		<type name="prktm:genehmigungBericht">
+			<parent>bpm:workflowTask</parent>
+			<overrides>
+				<property name="bpm:packageActionGroup">
+					<default>add_package_item_actions</default>
+       			</property>
+	       		<property name="bpm:packageItemActionGroup">
+	          		<default>edit_and_remove_package_item_actions</default>
+	       		</property>
+    		</overrides>
+			<mandatory-aspects>
+				<aspect>prktm:PraktikumDetails</aspect>>
+			</mandatory-aspects>
+		</type>
+		
+		<type name="prktm:praktikumCompleted">
+			<parent>bpm:workflowTask</parent>
+			<mandatory-aspects>
+				<aspect>prktm:PraktikumDetails</aspect>>
+			</mandatory-aspects>
+		</type>
+	</types>
+	
+	<aspects>
+
+       <aspect name="prktm:PraktikumDetails">
+           <title>Antragdetails</title>
+           <properties>
+           		<property name="prktm:kommentar1">
+					<title>Kommentar</title>
+					<type>d:text</type>
+					<mandatory>false</mandatory>
+				</property>
+           </properties>
+           <associations>
+                <association name="prktm:betreuer">
+                    <source>
+                        <mandatory>true</mandatory>
+                        <many>false</many>
+                    </source>
+                    <target>
+                        <class>cm:person</class>
+                        <mandatory>true</mandatory>
+                        <many>false</many>
+                    </target>
+                </association>
+            </associations>
+       </aspect>
+     
+   </aspects>
+	
+</model>

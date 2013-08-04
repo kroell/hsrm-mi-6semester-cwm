@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Definition of new Model -->
+<model name="idwf:qslRequestWorkflowModel" xmlns="http://www.alfresco.org/model/dictionary/1.0">
+
+	<!-- Optional meta-data about the model -->
+	<description>Qsl Workflow Model</description>
+	<author>Tino Landmann, Soeren Kroell</author>
+	<version>1.0</version>
+
+	<!-- Imports are required to allow references to definitions in other models -->
+	<imports>
+		<!-- Import Alfresco Dictionary Definitions -->
+		<import uri="http://www.alfresco.org/model/dictionary/1.0" prefix="d" />
+		<!-- Import Alfresco Content Domain Model Definitions -->
+		<import uri="http://www.alfresco.org/model/content/1.0" prefix="cm" />
+		<import uri="http://www.alfresco.org/model/bpm/1.0" prefix="bpm" />
+	</imports>
+
+	<!-- Introduction of new namespaces defined by this model -->
+	<namespaces>
+		<namespace uri="http://www.idseven.info/model/idwfWorkflowModel/1.0"
+			prefix="idwf" />
+	</namespaces>
+
+	<constraints>
+		<constraint name="idwf:requestStatusList" type="LIST">
+			<parameter name="allowedValues">
+				<list>
+					<value>Neuantrag</value>
+					<value>In Bearbeitung</value>
+					<value>Rückfragen</value>
+					<value>Bewilligt</value>
+					<value>Abgelehnt</value>
+				</list>
+			</parameter>
+		</constraint>
+	</constraints>
+	
+	
+	<types>
+		<!-- QSL request Workflow enable -->
+		<type name="idwf:submitQslRequest">
+			<parent>bpm:startTask</parent>
+			<mandatory-aspects>
+				<aspect>bpm:assignee</aspect>
+				<aspect>idwf:requestDetails</aspect>>
+			</mandatory-aspects>
+
+		</type>
+
+		<!-- QSL request Workflow has been started -->
+		<type name="idwf:qslRequest">
+			<parent>bpm:workflowTask</parent>
+			<mandatory-aspects>
+				<aspect>bpm:assignee</aspect>
+				<aspect>idwf:requestDetails</aspect>
+			</mandatory-aspects>
+		</type>
+
+		<!-- QSL request Workflow has been finalized -->
+		<type name="idwf:completedQslRequest">
+			<parent>bpm:workflowTask</parent>
+			<mandatory-aspects>
+				<aspect>bpm:assignee</aspect>
+				<aspect>idwf:requestDetails</aspect>>
+			</mandatory-aspects>
+		</type>
+
+	</types>
+	
+	<aspects>
+
+       <aspect name="idwf:requestDetails">
+           <title>Antragdetails</title>
+           <properties>
+           		<property name="idwf:requestDescription">
+					<title>Kurzbeschreibung des Antrags</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+				</property>
+				<property name="idwf:requestStatus">
+					<title>Antragsstatus</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+					<constraints>
+						<constraint ref="idwf:requestStatusList" />
+					</constraints>
+				</property>
+				<property name="idwf:requestDate">
+					<title>Antragsdatum</title>
+					<type>d:date</type>
+					<mandatory>true</mandatory>
+					<multiple>false</multiple>
+				</property>
+				<property name="idwf:requestSum">
+					<title>Gesamtkosten in EUR</title>
+					<type>d:float</type>
+					<mandatory>true</mandatory>
+					<multiple>false</multiple>
+				</property>
+				<property name="idwf:notifyMe">
+					<title>Informiere mich per E-Mail</title>
+					<type>d:boolean</type>
+					<default>false</default>
+				</property>
+           </properties>
+       </aspect>
+     
+   </aspects>
+	
+</model>
